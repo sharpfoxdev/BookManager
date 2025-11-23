@@ -1,9 +1,14 @@
 using BookManager.Core.Repositories;
 using BookManager.Core.Services;
+using BookManager.Infrastructure.Persistence;
 using BookManager.Infrastructure.Repositories;
 using BookManager.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<BookManagerDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("BookManagerDb")));
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
@@ -33,4 +38,11 @@ if(app.Environment.IsDevelopment())
 
 app.MapDefaultEndpoints();
 app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<BookManagerDbContext>();
+    db.Database.Migrate(); // or EnsureCreated() 
+}
+
 app.Run();

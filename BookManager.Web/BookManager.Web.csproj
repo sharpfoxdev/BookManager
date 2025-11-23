@@ -11,4 +11,9 @@
     <ProjectReference Include="..\BookManager.ServiceDefaults\BookManager.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Elements\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
