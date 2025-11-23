@@ -1,0 +1,43 @@
+﻿@using BookManager.Shared.Dtos
+@namespace BookManager.Blazor.Components.Elements
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Book.Title</h5>
+        <h6 class="card-subtitle mb-2 text-muted">by @Book.Author (@Book.YearPublished)</h6>
+        <p class="card-text">
+            <strong>ISBN:</strong> @Book.ISBN<br />
+            <strong>Available copies:</strong> @Book.AvailableCopies
+        </p>
+        <div class="d-flex gap-2">
+            @if (OnBorrow.HasDelegate && Book.AvailableCopies > 0)
+            {
+                <button class="btn btn-primary" @onclick="OnBorrowClicked">
+                    Borrow
+                </button>
+            }
+            @if (OnReturn.HasDelegate)
+            {
+                <button class="btn btn-secondary" @onclick="() => OnReturn.InvokeAsync(Book.Id)">
+                    Return
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public BookDto Book { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<Guid> OnBorrow { get; set; }
+
+    [Parameter]
+    public EventCallback<Guid> OnReturn { get; set; }
+    async Task OnBorrowClicked()
+    {
+        Console.WriteLine($"BorrowClick for {Book.Id}");
+        await OnBorrow.InvokeAsync(Book.Id);
+    }
+}

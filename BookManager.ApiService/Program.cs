@@ -1,9 +1,11 @@
+using BookManager.ApiService.Mappings;
 using BookManager.Core.Repositories;
 using BookManager.Core.Services;
 using BookManager.Infrastructure.Persistence;
 using BookManager.Infrastructure.Repositories;
 using BookManager.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,8 @@ builder.Services.AddSwaggerGen();
 
 // Add services to the container.
 builder.Services.AddProblemDetails();
+
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<BookProfile>());
 
 var app = builder.Build();
 

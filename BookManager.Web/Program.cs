@@ -1,5 +1,6 @@
 using BookManager.Web;
 using BookManager.Web.Components;
+using BookManager.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,12 +13,22 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-builder.Services.AddHttpClient<WeatherApiClient>(client =>
+builder.Services.AddHttpClient<BookApiClient>(client =>
     {
         // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
         // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
-        client.BaseAddress = new("https+http://apiservice");
+        client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BookApiBaseUrl"] ??
+                                   "https+http://apiservice");
     });
+builder.Services.AddScoped<IBookApiClient>(sp => sp.GetRequiredService<BookApiClient>());
+
+//builder.Services.AddHttpClient<WeatherApiClient>(client =>
+//    {
+//        // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
+//        // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
+//        client.BaseAddress = new("https+http://apiservice");
+//    });
+
 
 var app = builder.Build();
 

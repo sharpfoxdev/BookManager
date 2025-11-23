@@ -1,0 +1,21 @@
+﻿@page "/books"
+@using BookManager.Blazor.Components.Elements
+
+<h3>All Books</h3>
+
+@if (books == null)
+{
+    <p><em>Loading…</em></p>
+}
+else
+{
+    <div>
+        @foreach (var book in books)
+        {
+            <BookCard Book="book"
+                      OnBorrow="() => BorrowBook(book.Id)"
+                      OnReturn="() => ReturnBook(book.Id)" />
+        }
+    </div>
+}
+

@@ -9,11 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BookManager.ApiService\BookManager.ApiService.csproj" />
     <ProjectReference Include="..\BookManager.ServiceDefaults\BookManager.ServiceDefaults.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\Elements\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\BookManager.Shared\BookManager.Shared.csproj" />
   </ItemGroup>
 
 </Project>

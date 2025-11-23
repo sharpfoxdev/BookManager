@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="15.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BookManager.ServiceDefaults\BookManager.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\BookManager.Shared\BookManager.Shared.csproj" />
     <ProjectReference Include="..\Core\BookManager.Core.csproj" />
     <ProjectReference Include="..\Infrastructure\BookManager.Infrastructure.csproj" />
   </ItemGroup>
