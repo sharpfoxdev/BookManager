@@ -1,3 +1,10 @@
 <Solution>
-  <Project Path="BookManager.Blazor/BookManager.Blazor.csproj" />
+  <Project Path="BookManager.ApiService/BookManager.ApiService.csproj" />
+  <Project Path="BookManager.AppHost/BookManager.AppHost.csproj" Id="00fb6e88-3899-4e39-ad91-4f0018ce321f" />
+  <Project Path="BookManager.ServiceDefaults/BookManager.ServiceDefaults.csproj" />
+  <Project Path="BookManager.Shared/BookManager.Shared.csproj" Id="baf30f80-d837-4c0f-8d8e-b085d5affa78" />
+  <Project Path="BookManager.Tests/BookManager.Tests.csproj" />
+  <Project Path="BookManager.Web/BookManager.Web.csproj" />
+  <Project Path="Core/BookManager.Core.csproj" Id="57abba1d-2861-404c-a791-f1c57c317582" />
+  <Project Path="Infrastructure/BookManager.Infrastructure.csproj" Id="9b6035f5-81d6-40ff-9906-1aef74939ca3" />
 </Solution>

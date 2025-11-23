@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="10.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BookManager.ServiceDefaults\BookManager.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Core\BookManager.Core.csproj" />
+    <ProjectReference Include="..\Infrastructure\BookManager.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
