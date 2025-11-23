@@ -1,4 +1,12 @@
+using BookManager.Core.Repositories;
+using BookManager.Core.Services;
+using BookManager.Infrastructure.Repositories;
+using BookManager.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
@@ -24,5 +32,5 @@ if(app.Environment.IsDevelopment())
 }
 
 app.MapDefaultEndpoints();
-
+app.UseHttpsRedirection();
 app.Run();
