@@ -10,11 +10,18 @@ namespace BookManager.Web.Components.Pages
         
         [Inject]
         IBookApiClient BookApiClient { get; set; } = null!;
-        
+        private string searchTerm = "";
+
         protected override async Task OnInitializedAsync()
         {
             books = await BookApiClient.GetAllAsync();
         }
+        private IEnumerable<BookDto> FilteredBooks =>
+            (books ?? Enumerable.Empty<BookDto>())
+            .Where(b =>
+                b.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+             || b.Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+             || b.ISBN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
         async Task BorrowBook(Guid id)
         {

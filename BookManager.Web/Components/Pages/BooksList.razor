@@ -1,9 +1,16 @@
 ﻿@page "/books"
-@rendermode InteractiveServer
 
 @using BookManager.Blazor.Components.Elements
 
 <h3>All Books</h3>
+
+<div class="mb-3">
+    <input type="text"
+           class="form-control"
+           placeholder="Search by title, author or ISBN…"
+           @bind="searchTerm"
+           @bind:event="oninput" />
+</div>
 
 @if (books == null)
 {
@@ -12,7 +19,7 @@
 else
 {
     <div>
-        @foreach (var book in books)
+        @foreach (var book in FilteredBooks)
         {
             <BookCard Book="book"
                       OnBorrow="() => BorrowBook(book.Id)"

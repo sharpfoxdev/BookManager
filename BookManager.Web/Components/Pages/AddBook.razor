@@ -1,0 +1,35 @@
+﻿@page "/books/add"
+@using BookManager.Shared.Dtos
+@using BookManager.Web.Services
+
+
+<h3>Add New Book</h3>
+
+<EditForm Model="bookCreateModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <InputText class="form-control" @bind-Value="bookCreateModel.Title" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Author</label>
+        <InputText class="form-control" @bind-Value="bookCreateModel.Author" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Year Published</label>
+        <InputNumber class="form-control" @bind-Value="bookCreateModel.YearPublished" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">ISBN</label>
+        <InputText class="form-control" @bind-Value="bookCreateModel.ISBN" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Available Copies</label>
+        <InputNumber class="form-control" @bind-Value="bookCreateModel.AvailableCopies" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="button" class="btn btn-secondary ms-2" @onclick="Cancel">Cancel</button>
+</EditForm>

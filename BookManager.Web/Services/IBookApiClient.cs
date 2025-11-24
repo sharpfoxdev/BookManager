@@ -6,7 +6,7 @@ namespace BookManager.Web.Services
     {
         Task<IEnumerable<BookDto>> GetAllAsync();
         Task<IEnumerable<BookDto>> SearchAsync(string term);
-        Task AddAsync(BookDto book);
+        Task AddAsync(BookCreateDto book);
         Task BorrowAsync(Guid id);
         Task ReturnAsync(Guid id);
     }

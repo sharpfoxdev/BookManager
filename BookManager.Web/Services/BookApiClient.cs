@@ -23,7 +23,7 @@ namespace BookManager.Web.Services
             return await _http.GetFromJsonAsync<IEnumerable<BookDto>>($"api/books/search?term={Uri.EscapeDataString(term)}")!;
         }
 
-        public async Task AddAsync(BookDto book)
+        public async Task AddAsync(BookCreateDto book)
         {
             await _http.PostAsJsonAsync("api/books", book);
         }
