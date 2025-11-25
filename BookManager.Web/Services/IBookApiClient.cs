@@ -9,5 +9,7 @@ namespace BookManager.Web.Services
         Task AddAsync(BookCreateDto book);
         Task BorrowAsync(Guid id);
         Task ReturnAsync(Guid id);
+        Task<List<LoanHistoryDto>> GetHistoryAsync(Guid bookId);
+
     }
 }

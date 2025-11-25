@@ -18,6 +18,7 @@ namespace BookManager.ApiService.Mappings
             CreateMap<Book, BookDto>().ReverseMap();
             CreateMap<BookCreateDto, Book>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
+            CreateMap<LoanHistory, LoanHistoryDto>();
         }
     }
 }

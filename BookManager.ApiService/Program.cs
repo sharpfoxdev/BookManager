@@ -14,6 +14,7 @@ builder.Services.AddDbContext<BookManagerDbContext>(options =>
 
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<ILoanHistoryRepository, LoanHistoryRepository>();
 
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();

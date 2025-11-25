@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookManager.Core.Models;
+using BookManager.Core.Repositories;
 using BookManager.Core.Services;
 using BookManager.Infrastructure.Services;
 using BookManager.Shared.Dtos;
@@ -14,11 +15,13 @@ namespace BookManager.ApiService.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly ILoanHistoryRepository _historyRepository;
         private readonly IMapper _mapper;
 
-        public BooksController(IBookService service, IMapper mapper)
+        public BooksController(IBookService service, ILoanHistoryRepository historyRepository, IMapper mapper)
         {
             _bookService = service;
+            _historyRepository = historyRepository;
             _mapper = mapper;
         }
 
@@ -112,6 +115,12 @@ namespace BookManager.ApiService.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { Message = "An unexpected error occurred." });
             }
+        }
+        [HttpGet("{id}/history")]
+        public async Task<ActionResult<List<LoanHistoryDto>>> GetHistory(Guid id, CancellationToken cancellationToken)
+        {
+            var history = await _historyRepository.GetByBookIdAsync(id, cancellationToken);
+            return Ok(_mapper.Map<List<LoanHistoryDto>>(history));
         }
     }
 }

@@ -59,6 +59,14 @@ namespace BookManager.Web.Services
             var response = await _http.PostAsync($"api/books/{id}/return", null);
             await EnsureSuccess(response);
         }
+
+        public async Task<List<LoanHistoryDto>> GetHistoryAsync(Guid bookId)
+        {
+            var response = await _http.GetAsync($"api/books/{bookId}/history");
+            await EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<List<LoanHistoryDto>>()!
+                   ?? new List<LoanHistoryDto>();
+        }
         private static async Task EnsureSuccess(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)

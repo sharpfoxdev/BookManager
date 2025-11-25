@@ -13,10 +13,12 @@ namespace BookManager.Infrastructure.Services
     public class BookService : IBookService
     {
         private readonly IBookRepository _repo;
+        private readonly ILoanHistoryRepository _historyRepo;
 
-        public BookService(IBookRepository repo)
+        public BookService(IBookRepository repo, ILoanHistoryRepository historyRepository)
         {
             _repo = repo;
+            _historyRepo = historyRepository;
         }
 
         public Task<IEnumerable<Book>> GetAllBooksAsync(CancellationToken cancellationToken = default)
@@ -55,6 +57,12 @@ namespace BookManager.Infrastructure.Services
             {
                 throw new InvalidOperationException("The book record was modified concurrently. Please reload and try again.");
             }
+            await _historyRepo.AddAsync(new LoanHistory
+            {
+                BookId = id,
+                Action = "Borrow",
+                Timestamp = DateTime.UtcNow
+            }, cancellationToken);
         }
 
         public async Task ReturnBookAsync(Guid id, CancellationToken cancellationToken = default)
@@ -73,6 +81,12 @@ namespace BookManager.Infrastructure.Services
             {
                 throw new InvalidOperationException("The book record was modified concurrently. Please reload and try again.");
             }
+            await _historyRepo.AddAsync(new LoanHistory
+            {
+                BookId = id,
+                Action = "Return",
+                Timestamp = DateTime.UtcNow
+            }, cancellationToken);
         }
     }
 }

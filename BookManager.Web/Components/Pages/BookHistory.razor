@@ -1,0 +1,46 @@
+﻿@page "/books/{BookId:guid}/history"
+
+
+<h3>Loan History</h3>
+
+@if (history == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (history.Count == 0)
+{
+    <div class="alert alert-info">
+        No history found for this book.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in history)
+            {
+                <tr>
+                    <td>
+                        @if (h.Action == "Borrow")
+                        {
+                            <span class="badge bg-danger">Borrowed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Returned</span>
+                        }
+                    </td>
+                    <td>@h.Timestamp.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+

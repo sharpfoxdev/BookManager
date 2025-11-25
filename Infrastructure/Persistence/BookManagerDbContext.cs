@@ -13,11 +13,10 @@ namespace BookManager.Infrastructure.Persistence
         public BookManagerDbContext(DbContextOptions<BookManagerDbContext> options)
             : base(options)
         {
-            //Database.EnsureCreated();
         }
 
         public DbSet<Book> Books { get; set; } = default!;
-
+        public DbSet<LoanHistory> LoanHistories => Set<LoanHistory>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +27,9 @@ namespace BookManager.Infrastructure.Persistence
             modelBuilder.Entity<Book>()
                 .Property(b => b.VersionToken)
                 .IsConcurrencyToken();
+            modelBuilder.Entity<LoanHistory>()
+                .Property(p => p.Action)
+                .IsRequired();
 
         }
     }
