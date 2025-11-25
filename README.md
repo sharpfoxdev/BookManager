@@ -1,6 +1,6 @@
 # BookManager
 
-Example full stack ASP.NET Core and Blazor Server application for borrowing and returning books. Uses Clean Architecture, EF COre, SQLite, Swagger for REST API. 
+Example full stack ASP.NET Core and Blazor Server application for borrowing and returning books. Uses Clean Architecture, EF Core, SQLite or Swagger for REST API. 
 
 ## How to run
 
@@ -8,6 +8,7 @@ Example full stack ASP.NET Core and Blazor Server application for borrowing and 
 	- Can run both API and frontend simultaneously - Set AppHost as starting project
 - App halso has dockerfiles and docker-compose.yml, so quick `docker compose up --build` will get the app running (both apiservice (backend) and frontend)
 - SQLite database has volume mapped in docker compose, the SQLite files are stored in the apiservice (backend) container in `/app/data`
+- Swagger runs at [link](http://localhost:5001/swagger/index.html)
 
 ## Project structure
 
