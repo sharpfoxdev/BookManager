@@ -36,6 +36,6 @@ Example full stack ASP.NET Core and Blazor Server application for borrowing and 
 - data stored in SQLite database
 - REST API with Swagger documentation
 - Blazor Server frontend
-	- list books, search for book, add book, borrow/return book
+	- list books, search for book, add book, borrow/return book, show history
 - validation on both frontend and API level
 - used ChatGPT 5.1 for assistance and faster development, mainly for boilerplate code generation, like Controllers on backend or BookApiClient or components on frontend
