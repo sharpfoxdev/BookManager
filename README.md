@@ -25,3 +25,16 @@ Example full stack ASP.NET Core and Blazor Server application for borrowing and 
 ### Frontend 
 - BookManager.Web - Blazor Server frontend, uses REST API to get data from backend
 - BookManager.Shared - contains DTOs for REST API, that are shared by both frontend and backend
+
+## Features
+- listing of books
+- adding new book
+- searching for books
+- borrowing book
+- returning book
+- data stored in SQLite database
+- REST API with Swagger documentation
+- Blazor Server frontend
+	- list books, search for book, add book, borrow/return book
+- validation on both frontend and API level
+- used ChatGPT 5.1 for assistance and faster development, mainly for boilerplate code generation, like Controllers on backend or BookApiClient or components on frontend

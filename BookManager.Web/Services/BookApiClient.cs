@@ -36,7 +36,6 @@ namespace BookManager.Web.Services
 
         public async Task<IEnumerable<BookDto>> SearchAsync(string term)
         {
-            //return await _http.GetFromJsonAsync<IEnumerable<BookDto>>($"api/books/search?term={Uri.EscapeDataString(term)}")!;
             var response = await _http.GetAsync($"api/books/search?term={Uri.EscapeDataString(term)}");
             await EnsureSuccess(response);
             return await response.Content.ReadFromJsonAsync<IEnumerable<BookDto>>()!
@@ -47,21 +46,18 @@ namespace BookManager.Web.Services
         {
             var response = await _http.PostAsJsonAsync("api/books", book);
             await EnsureSuccess(response);
-            //await _http.PostAsJsonAsync("api/books", book);
         }
 
         public async Task BorrowAsync(Guid id)
         {
             var response = await _http.PostAsync($"api/books/{id}/borrow", null);
             await EnsureSuccess(response);
-            //await _http.PostAsync($"api/books/{id}/borrow", null);
         }
 
         public async Task ReturnAsync(Guid id)
         {
             var response = await _http.PostAsync($"api/books/{id}/return", null);
             await EnsureSuccess(response);
-            //await _http.PostAsync($"api/books/{id}/return", null);
         }
         private static async Task EnsureSuccess(HttpResponseMessage response)
         {
