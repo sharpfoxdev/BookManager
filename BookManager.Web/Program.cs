@@ -17,7 +17,7 @@ builder.Services.AddHttpClient<BookApiClient>(client =>
     {
         // This URL uses "https+http://" to indicate HTTPS is preferred over HTTP.
         // Learn more about service discovery scheme resolution at https://aka.ms/dotnet/sdschemes.
-        client.BaseAddress = new Uri(builder.Configuration["ApiSettings:BookApiBaseUrl"] ??
+        client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("API_BASE_URL") ?? builder.Configuration["ApiSettings:BookApiBaseUrl"] ??
                                    "https+http://apiservice");
     });
 builder.Services.AddScoped<IBookApiClient>(sp => sp.GetRequiredService<BookApiClient>());

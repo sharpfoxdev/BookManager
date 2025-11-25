@@ -1,0 +1,21 @@
+services:
+  apiservice:
+    build:
+      dockerfile: BookManager.ApiService/Dockerfile
+    ports:
+      - "5001:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - sqlite_data:/app/data
+  webfrontend:
+    build: 
+     dockerfile: BookManager.Web/Dockerfile
+    ports:
+      - "5000:8080"
+    depends_on:
+      - apiservice
+    environment:
+      - API_BASE_URL=http://apiservice:8080
+volumes:
+  sqlite_data:

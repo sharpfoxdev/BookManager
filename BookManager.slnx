@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="BookManager.ApiService/BookManager.ApiService.csproj" />
   <Project Path="BookManager.AppHost/BookManager.AppHost.csproj" Id="00fb6e88-3899-4e39-ad91-4f0018ce321f" />
   <Project Path="BookManager.ServiceDefaults/BookManager.ServiceDefaults.csproj" />

@@ -4,13 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>c2ef0638-d837-4262-8b99-ef1a1c12d643</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BookManager.ApiService\BookManager.ApiService.csproj" />
     <ProjectReference Include="..\BookManager.ServiceDefaults\BookManager.ServiceDefaults.csproj" />
     <ProjectReference Include="..\BookManager.Shared\BookManager.Shared.csproj" />
   </ItemGroup>
