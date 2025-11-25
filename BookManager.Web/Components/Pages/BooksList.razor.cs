@@ -1,5 +1,6 @@
 ﻿using BookManager.Shared.Dtos;
 using BookManager.Web.Services;
+using Grpc.Core;
 using Microsoft.AspNetCore.Components;
 
 namespace BookManager.Web.Components.Pages
@@ -11,10 +12,27 @@ namespace BookManager.Web.Components.Pages
         [Inject]
         IBookApiClient BookApiClient { get; set; } = null!;
         private string searchTerm = "";
-
+        private string? errorMessage;
         protected override async Task OnInitializedAsync()
         {
-            books = await BookApiClient.GetAllAsync();
+            await LoadBooksAsync();
+        }
+        private async Task LoadBooksAsync()
+        {
+            try
+            {
+                books = await BookApiClient.GetAllAsync();
+            }
+            catch (HttpRequestException)
+            {
+                errorMessage = "Cannot reach server. Please try again later.";
+                books = Array.Empty<BookDto>();
+            }
+            catch (Exception)
+            {
+                errorMessage = "An unexpected error occurred while loading books.";
+                books = Array.Empty<BookDto>();
+            }
         }
         private IEnumerable<BookDto> FilteredBooks =>
             (books ?? Enumerable.Empty<BookDto>())
@@ -23,16 +41,98 @@ namespace BookManager.Web.Components.Pages
              || b.Author.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
              || b.ISBN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
 
-        async Task BorrowBook(Guid id)
+        private async Task BorrowBook(Guid id)
         {
-            await BookApiClient.BorrowAsync(id);
-            books = await BookApiClient.GetAllAsync();
+
+            try
+            {
+                await BookApiClient.BorrowAsync(id);
+                await LoadBooksAsync();
+            }
+            catch (ApiException apiEx)
+            {
+                if (apiEx.StatusCode == 409)
+                {
+                    errorMessage = "Another user modified this book. Please reload and try again.";
+                }
+                else if (apiEx.StatusCode == 404)
+                {
+                    errorMessage = "The book was not found.";
+                }
+                else if (apiEx.StatusCode == 400)
+                {
+                    errorMessage = "Invalid request: " + apiEx.ResponseMessage;
+                }
+                else if (apiEx.StatusCode >= 500)
+                {
+                    errorMessage = "Server error. Please contact support or try again later.";
+                }
+                else
+                {
+                    errorMessage = "Unexpected error occurred while borrowing the book.";
+                }
+
+                await LoadBooksAsync();
+            }
+            catch (HttpRequestException)
+            {
+                errorMessage = "Cannot reach server. Please try again later.";
+                await LoadBooksAsync();
+            }
+            catch (Exception)
+            {
+                errorMessage = "An unexpected error occurred. Please try again later.";
+                await LoadBooksAsync();
+            }
         }
 
-        async Task ReturnBook(Guid id)
+        private async Task ReturnBook(Guid id)
         {
-            await BookApiClient.ReturnAsync(id);
-            books = await BookApiClient.GetAllAsync();
+
+            try
+            {
+                await BookApiClient.ReturnAsync(id);
+                await LoadBooksAsync();
+            }
+            catch (ApiException apiEx)
+            {
+                if (apiEx.StatusCode == 409)
+                {
+                    errorMessage = "Another user modified this book. Please reload and try again.";
+                }
+                else if (apiEx.StatusCode == 404)
+                {
+                    errorMessage = "The book was not found.";
+                }
+                else if (apiEx.StatusCode == 400)
+                {
+                    errorMessage = "Invalid request: " + apiEx.ResponseMessage;
+                }
+                else if (apiEx.StatusCode >= 500)
+                {
+                    errorMessage = "Server error. Please contact support or try again later.";
+                }
+                else
+                {
+                    errorMessage = "Unexpected error occurred while returning the book.";
+                }
+
+                await LoadBooksAsync();
+            }
+            catch (HttpRequestException)
+            {
+                errorMessage = "Cannot reach server. Please try again later.";
+                await LoadBooksAsync();
+            }
+            catch (Exception)
+            {
+                errorMessage = "An unexpected error occurred. Please try again later.";
+                await LoadBooksAsync();
+            }
+        }
+        private void ClearError()
+        {
+            errorMessage = null;
         }
     }
 }

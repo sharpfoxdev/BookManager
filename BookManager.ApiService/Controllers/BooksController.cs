@@ -5,6 +5,7 @@ using BookManager.Infrastructure.Services;
 using BookManager.Shared.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookManager.ApiService.Controllers
 {
@@ -28,26 +29,16 @@ namespace BookManager.ApiService.Controllers
             var bookDtos = _mapper.Map<IEnumerable<BookDto>>(books);
             return Ok(bookDtos);
         }
-        //[HttpGet]
-        //public async Task<IEnumerable<Book>> GetAllBooks()
-        //{
-        //    return await _bookService.GetAllBooksAsync();
-        //}
+
         [HttpPost]
         public async Task<IActionResult> AddBook(BookCreateDto createDto, CancellationToken cancellationToken = default)
         {
             var book = _mapper.Map<Book>(createDto);
-            // maybe set book.Id = Guid.NewGuid();
             await _bookService.AddBookAsync(book, cancellationToken);
             var responseDto = _mapper.Map<BookDto>(book);
             return CreatedAtAction(nameof(GetBookById), new { id = responseDto.Id }, responseDto);
         }
-        //[HttpPost]
-        //public async Task<IActionResult> AddBook(Book book)
-        //{
-        //    await _bookService.AddBookAsync(book);
-        //    return CreatedAtAction(nameof(GetAllBooks), new { id = book.Id }, book);
-        //}
+
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<BookDto>> GetBookById(Guid id, CancellationToken cancellationToken = default)
         {
@@ -60,6 +51,7 @@ namespace BookManager.ApiService.Controllers
             var bookDto = _mapper.Map<BookDto>(book);
             return Ok(bookDto);
         }
+
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<BookDto>>> SearchBooks([FromQuery] string term, CancellationToken cancellationToken = default)
         {
@@ -67,35 +59,59 @@ namespace BookManager.ApiService.Controllers
             var dtoResults = _mapper.Map<IEnumerable<BookDto>>(results);
             return Ok(dtoResults);
         }
-        //[HttpGet("search")]
-        //public async Task<IEnumerable<Book>> SearchBooks([FromQuery] string term)
-        //{
-        //    return await _bookService.SearchBooksAsync(term);
-        //}
+
         [HttpPost("{id:guid}/borrow")]
         public async Task<IActionResult> BorrowBook(Guid id, CancellationToken cancellationToken = default)
         {
-            await _bookService.BorrowBookAsync(id, cancellationToken);
-            return NoContent();
+            try
+            {
+                await _bookService.BorrowBookAsync(id, cancellationToken);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("No copies available", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Book not found", StringComparison.OrdinalIgnoreCase))
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("concurrently", StringComparison.OrdinalIgnoreCase))
+            {
+                return Conflict(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Message = "An unexpected error occurred." });
+            }
         }
-        //[HttpPost("{id}/borrow")]
-        //public async Task<IActionResult> BorrowBook(Guid id)
-        //{
-        //    await _bookService.BorrowBookAsync(id);
-        //    return NoContent();
-        //}
 
         [HttpPost("{id:guid}/return")]
         public async Task<IActionResult> ReturnBook(Guid id, CancellationToken cancellationToken = default)
         {
-            await _bookService.ReturnBookAsync(id, cancellationToken);
-            return NoContent();
+            try
+            {
+                await _bookService.ReturnBookAsync(id, cancellationToken);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("overflow", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Book not found", StringComparison.OrdinalIgnoreCase))
+            {
+                return NotFound(new { ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("concurrently", StringComparison.OrdinalIgnoreCase))
+            {
+                return Conflict(new { ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { Message = "An unexpected error occurred." });
+            }
         }
-        //[HttpPost("{id}/return")]
-        //public async Task<IActionResult> ReturnBook(Guid id)
-        //{
-        //    await _bookService.ReturnBookAsync(id);
-        //    return NoContent();
-        //}
     }
 }

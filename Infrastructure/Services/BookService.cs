@@ -1,12 +1,12 @@
-﻿using System;
+﻿using BookManager.Core.Models;
+using BookManager.Core.Repositories;
+using BookManager.Core.Services;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using BookManager.Core.Models;
-using BookManager.Core.Repositories;
-using BookManager.Core.Services;
 
 namespace BookManager.Infrastructure.Services
 {
@@ -45,15 +45,34 @@ namespace BookManager.Infrastructure.Services
             if (book == null) throw new InvalidOperationException("Book not found");
             if (book.AvailableCopies <= 0) throw new InvalidOperationException("No copies available");
             book.AvailableCopies--;
-            await _repo.UpdateAsync(book, cancellationToken);
+            book.VersionToken = Guid.NewGuid();
+
+            try
+            {
+                await _repo.UpdateAsync(book, cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new InvalidOperationException("The book record was modified concurrently. Please reload and try again.");
+            }
         }
 
         public async Task ReturnBookAsync(Guid id, CancellationToken cancellationToken = default)
         {
             var book = await _repo.GetByIdAsync(id, cancellationToken);
             if (book == null) throw new InvalidOperationException("Book not found");
+            if (book.AvailableCopies == int.MaxValue)
+                throw new InvalidOperationException("AvailableCopies overflow detected");
             book.AvailableCopies++;
-            await _repo.UpdateAsync(book, cancellationToken);
+            book.VersionToken = Guid.NewGuid();
+            try
+            {
+                await _repo.UpdateAsync(book, cancellationToken);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw new InvalidOperationException("The book record was modified concurrently. Please reload and try again.");
+            }
         }
     }
 }

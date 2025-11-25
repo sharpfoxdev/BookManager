@@ -16,7 +16,7 @@
                     Borrow
                 </button>
             }
-            @if (OnReturn.HasDelegate)
+            @if (OnReturn.HasDelegate && Book.AvailableCopies < int.MaxValue)
             {
                 <button class="btn btn-secondary" @onclick="() => OnReturn.InvokeAsync(Book.Id)">
                     Return

@@ -25,6 +25,10 @@ namespace BookManager.Infrastructure.Persistence
             modelBuilder.Entity<Book>()
                 .HasKey(b => b.Id);
 
+            modelBuilder.Entity<Book>()
+                .Property(b => b.VersionToken)
+                .IsConcurrencyToken();
+
         }
     }
 }

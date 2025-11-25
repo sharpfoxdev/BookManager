@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,5 +15,8 @@ namespace BookManager.Core.Models
         public int YearPublished { get; set; }
         public string ISBN { get; set; } = default!;
         public int AvailableCopies { get; set; }
+
+        [ConcurrencyCheck]
+        public Guid VersionToken { get; set; } = Guid.NewGuid();
     }
 }

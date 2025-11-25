@@ -2,6 +2,18 @@
 
 namespace BookManager.Web.Services
 {
+    public class ApiException : Exception
+    {
+        public int StatusCode { get; }
+        public string? ResponseMessage { get; }
+
+        public ApiException(int statusCode, string? responseMessage = null)
+            : base($"API call failed with status {statusCode}")
+        {
+            StatusCode = statusCode;
+            ResponseMessage = responseMessage;
+        }
+    }
     public class BookApiClient : IBookApiClient
     {
         private readonly HttpClient _http;
@@ -15,27 +27,55 @@ namespace BookManager.Web.Services
         public async Task<IEnumerable<BookDto>> GetAllAsync()
         {
             //return await _http.GetFromJsonAsync<IEnumerable<BookDto>>(new Uri("https://localhost:7318/api/books"))!;
-            return await _http.GetFromJsonAsync<IEnumerable<BookDto>>("api/books")!;
+            //return await _http.GetFromJsonAsync<IEnumerable<BookDto>>("api/books")!;
+            var response = await _http.GetAsync("api/books");
+            await EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<IEnumerable<BookDto>>()!
+                   ?? Enumerable.Empty<BookDto>();
         }
 
         public async Task<IEnumerable<BookDto>> SearchAsync(string term)
         {
-            return await _http.GetFromJsonAsync<IEnumerable<BookDto>>($"api/books/search?term={Uri.EscapeDataString(term)}")!;
+            //return await _http.GetFromJsonAsync<IEnumerable<BookDto>>($"api/books/search?term={Uri.EscapeDataString(term)}")!;
+            var response = await _http.GetAsync($"api/books/search?term={Uri.EscapeDataString(term)}");
+            await EnsureSuccess(response);
+            return await response.Content.ReadFromJsonAsync<IEnumerable<BookDto>>()!
+                   ?? Enumerable.Empty<BookDto>();
         }
 
         public async Task AddAsync(BookCreateDto book)
         {
-            await _http.PostAsJsonAsync("api/books", book);
+            var response = await _http.PostAsJsonAsync("api/books", book);
+            await EnsureSuccess(response);
+            //await _http.PostAsJsonAsync("api/books", book);
         }
 
         public async Task BorrowAsync(Guid id)
         {
-            await _http.PostAsync($"api/books/{id}/borrow", null);
+            var response = await _http.PostAsync($"api/books/{id}/borrow", null);
+            await EnsureSuccess(response);
+            //await _http.PostAsync($"api/books/{id}/borrow", null);
         }
 
         public async Task ReturnAsync(Guid id)
         {
-            await _http.PostAsync($"api/books/{id}/return", null);
+            var response = await _http.PostAsync($"api/books/{id}/return", null);
+            await EnsureSuccess(response);
+            //await _http.PostAsync($"api/books/{id}/return", null);
+        }
+        private static async Task EnsureSuccess(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+                return;
+
+            string? message = null;
+            try
+            {
+                message = await response.Content.ReadAsStringAsync();
+            }
+            catch { /* ignore content read failure */ }
+
+            throw new ApiException((int)response.StatusCode, message);
         }
     }
 }
