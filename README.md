@@ -32,6 +32,7 @@ Example full stack ASP.NET Core and Blazor Server application for borrowing and 
 - searching for books
 - borrowing book
 - returning book
+- displaying history of borrowings for each book
 - data stored in SQLite database
 - REST API with Swagger documentation
 - Blazor Server frontend
